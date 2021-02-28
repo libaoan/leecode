@@ -1,0 +1,2 @@
+# leecode
+Leecode for Golang
