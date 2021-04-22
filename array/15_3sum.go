@@ -9,7 +9,8 @@ func main() {
 	nums := []int{-1, 0, 1, 2, -1, -4}
 	//nums = []int{}
 	//nums = []int{0}
-	res := threeSum(nums)
+	// res := threeSum(nums)
+	res := threeSum2(nums)
 	fmt.Println(res)
 }
 
@@ -64,5 +65,42 @@ func SliceContains(li [][]int, item []int) bool {
 		return true
 	} else {
 		return false
+	}
+}
+
+// TODO 优化， 有序序列两端向中间遍历
+func threeSum2(nums []int) [][]int {
+	res := [][]int{}
+	sort.Ints(nums)
+	fRange(0, len(nums)-1, nums, res)
+	return res
+}
+
+func fRange(left, right int, nums []int, res [][]int) {
+	if left >= right {
+		return
+	}
+	for _, x := range nums[left+1 : right] {
+		sum := nums[left] + nums[right] + x
+		switch {
+
+		case sum == 0:
+			{
+				r := []int{nums[left], x, nums[right]}
+				res = append(res, r)
+			}
+		case sum < 0:
+			{
+				left++
+				fRange(left, right, nums, res)
+			}
+		case sum > 0:
+			{
+				right--
+				fRange(left, right, nums, res)
+			}
+
+		}
+
 	}
 }
