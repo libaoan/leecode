@@ -42,13 +42,15 @@ func fourSum(nums []int, left, right, target int) [][]int {
 			sum := nums[left] + nums[right]
 			if sum >= target {
 				right--
-				return fourSum(nums[left:right+1], left, right, target)
+				newNums := nums[left : right+1]
+				return fourSum(newNums, 0, len(newNums)-1, target)
 			} else {
 
-				left++
-				right--
+				twoLeft := left + 1
+				twoRight := right - 1
 				twoTarget := target - (nums[left] + nums[right])
-				resTwo2 := twoSum(nums[right:left], right, left, twoTarget)
+				twoNums := nums[twoLeft : twoRight+1]
+				resTwo2 := twoSum(twoNums, 0, len(twoNums)-1, twoTarget)
 				if resTwo2 != nil {
 					ress := [][]int{}
 					for _, x := range resTwo2 {
@@ -62,16 +64,16 @@ func fourSum(nums []int, left, right, target int) [][]int {
 					}
 
 				}
-				right1 := right - 1
-				res2 := fourSum(nums[left:right1+1], left, right1, target)
+				newNums := nums[left:right]
+				res2 := fourSum(newNums, 0, len(newNums)-1, target)
 				if res2 != nil {
 					for _, y := range res2 {
 						res = append(res, y)
 					}
 				}
 
-				left1 := left + 1
-				res3 := fourSum(nums[left1:right+1], left1, right, target)
+				newNums = nums[left+1 : right+1]
+				res3 := fourSum(newNums, 0, len(newNums)-1, target)
 				if res3 != nil {
 					for _, z := range res3 {
 						res = append(res, z)
@@ -110,9 +112,8 @@ func twoSum(nums []int, left, right, target int) [][]int {
 			if sum == target {
 				r := []int{nums[left], nums[right]}
 				res = append(res, r)
-				left++
-				right--
-				res1 := twoSum(nums[left:right+1], left, right, target)
+				newNums := nums[left+1 : right]
+				res1 := twoSum(newNums, 0, len(newNums)-1, target)
 				if res1 != nil {
 					for _, n := range res1 {
 						res = append(res, n)
@@ -121,11 +122,12 @@ func twoSum(nums []int, left, right, target int) [][]int {
 				return res
 			}
 			if sum > target {
-				right--
-				return twoSum(nums[left:right+1], left, right, target)
+				newNums := nums[left:right]
+				return twoSum(newNums, 0, len(newNums)-1, target)
 			} else {
-				left++
-				res2 := twoSum(nums[left:right+1], left, right, target)
+
+				newNums := nums[left+1 : right+1]
+				res2 := twoSum(newNums, 0, len(newNums)-1, target)
 				if res2 != nil {
 					for _, x := range res2 {
 						res = append(res, x)
