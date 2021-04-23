@@ -41,15 +41,12 @@ func fourSum(nums []int, left, right, target int) [][]int {
 		{
 			sum := nums[left] + nums[right]
 			if sum >= target {
-				right--
-				newNums := nums[left : right+1]
+				newNums := nums[left:right]
 				return fourSum(newNums, 0, len(newNums)-1, target)
 			} else {
 
-				twoLeft := left + 1
-				twoRight := right - 1
 				twoTarget := target - (nums[left] + nums[right])
-				twoNums := nums[twoLeft : twoRight+1]
+				twoNums := nums[left+1 : right]
 				resTwo2 := twoSum(twoNums, 0, len(twoNums)-1, twoTarget)
 				if resTwo2 != nil {
 					ress := [][]int{}
