@@ -5,10 +5,14 @@ import "fmt"
 func main() {
 	nums1 := "123"
 	nums2 := "456"
+
+	nums1 = "498828660196"
+	nums2 = "840477629533"
 	res := multiply(nums1, nums2)
 	fmt.Printf("%d * %d = %d", nums1, nums2, res)
 }
 
+// 顺向思维，大数加法溢出
 func multiply(num1 string, num2 string) string {
 	sums := []int{}
 	length1 := len(num1)
@@ -51,8 +55,18 @@ func multiply(num1 string, num2 string) string {
 		sum += s
 	}
 	str := []rune{}
-	for _, c := range string(sum) {
-		str = append(str, c)
+	for {
+		wei := sum % 10
+		str = append(str, rune(wei+48))
+		sum = sum / 10
+		if sum < 1 {
+			break
+		}
 	}
-	return string(sum)
+	str2 := ""
+	maxIndex := len(str) - 1
+	for i, _ := range str {
+		str2 += string(str[maxIndex-i])
+	}
+	return str2
 }
