@@ -11,34 +11,14 @@ func main() {
 	fmt.Println("After:", n, nums)
 }
 
-// TODO: 未调试
+// 遍历
 func removeElement(nums []int, val int) int {
-	length := len(nums)
-	if length == 0 {
-		return 0
-	}
-	i := 0
-
-	for {
-		if (nums[i] - val) == 0 {
-
-			if i != length-1 {
-				for j, v := range nums[i:] {
-					if v != val {
-						nums[i] = v
-						nums[j] = val
-						break
-					}
-				}
-				return i - 1
-			}
-			return i - 1
-		} else {
-			i++
-		}
-		if i == length {
-			break
+	left := 0
+	for _, v := range nums { // v 即 nums[right]
+		if v != val {
+			nums[left] = v
+			left++
 		}
 	}
-	return i
+	return left
 }
