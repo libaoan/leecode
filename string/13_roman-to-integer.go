@@ -5,7 +5,7 @@ import "fmt"
 func main() {
 	ss := []string{"MCMXCIV", "LVIII", "IX", "IV", "III"}
 	for _, s := range ss {
-		fmt.Println(romanToInt(s))
+		fmt.Println(romanToInt2(s))
 	}
 }
 
@@ -52,4 +52,29 @@ func romanToInt(s string) int {
 		}
 	}
 
+}
+
+// 优化，一步看2位， 前一位大为相加，前一位小为相减
+func romanToInt2(s string) int {
+	maps := map[string]int{
+		"M": 1000,
+		"D": 500,
+		"C": 100,
+		"L": 50,
+		"X": 10,
+		"V": 5,
+		"I": 1,
+	}
+	sum := 0
+	pre := maps[string(s[0])]
+	for i := 1; i < len(s); i++ {
+		n := maps[string(s[i])]
+		if n > pre {
+			sum = sum - pre
+		} else {
+			sum = sum + pre
+		}
+		pre = n
+	}
+	return sum + pre
 }
