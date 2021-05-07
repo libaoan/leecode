@@ -12,6 +12,7 @@ func main() {
 	s = "([)]"
 	s = "{[]}"
 	res := isValid(s)
+	res = isValid2(s)
 	fmt.Printf("the str `%s` is valid parentheses %v", s, res)
 }
 
@@ -57,4 +58,30 @@ func isValid(s string) bool {
 	} else {
 		return true
 	}
+}
+
+// 优化
+func isValid2(s string) bool {
+	length := len(s)
+	if length%2 == 1 {
+		return false
+	}
+
+	maps := map[byte]byte{
+		')': '(',
+		']': '[',
+		'}': '{',
+	}
+	stack := []byte{}
+	for i := 0; i < length; i++ {
+		if maps[s[i]] > 0 {
+			if len(stack) == 0 || stack[len(stack)-1] != maps[s[i]] {
+				return false
+			}
+			stack = stack[:len(stack)-1]
+		} else {
+			stack = append(stack, s[i])
+		}
+	}
+	return len(stack) == 0
 }
