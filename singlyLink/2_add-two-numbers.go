@@ -1,23 +1,33 @@
 package main
 
+import "fmt"
+
 func main() {
 	l1 := &ListNode{}
 	p1 := l1
-	for _, v := range []int{2, 3, 4} {
+	num1 := []int{2, 4, 3}
+	lenth1 := len(num1)
+	for i, v := range num1 {
 		p1.Val = v
-		p1.Next = &ListNode{}
-		p1 = p1.Next
+		if i != lenth1-1 {
+			p1.Next = &ListNode{}
+			p1 = p1.Next
+		}
 	}
 	l2 := &ListNode{}
 	p2 := l2
-	for _, v := range []int{4, 5, 6} {
+	num2 := []int{5, 6, 7}
+	lenth2 := len(num2)
+	for i, v := range num2 {
 		p2.Val = v
-		p2.Next = &ListNode{}
-		p2 = p2.Next
+		if i != lenth2-1 {
+			p2.Next = &ListNode{}
+			p2 = p2.Next
+		}
 	}
 
 	l := addTwoNumbers(l1, l2)
-	println(l)
+	fmt.Println("%s", *l)
 }
 
 // Definition for singly-linked list.
@@ -32,11 +42,11 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 	p1, p2 := l1, l2
 	flag := 0
 	for {
-		if p1.Next != nil && p2.Next != nil {
+		if p1 != nil && p2 != nil {
 			flag = p1.Val + p2.Val + flag
 			if flag >= 10 {
-				p.Val = flag % 10
-				flag = flag - 10
+				p.Val = flag - 10
+				flag = flag / 10
 			} else {
 				p.Val = flag
 				flag = 0
@@ -45,18 +55,23 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 			p = p.Next
 			p1 = p1.Next
 			p2 = p2.Next
-		} else if p1.Next == nil && p2.Next == nil {
-			return newL
+		} else if p1 == nil && p2 == nil {
+			if flag != 0 {
+				p.Val = flag
+				return newL
+			} else {
+				return newL
+			}
 		} else {
 			break
 		}
 	}
 	for {
-		if p1.Next != nil {
+		if p1 != nil {
 			flag = p1.Val + flag
 			if flag >= 10 {
-				p.Val = flag % 10
-				flag = flag - 10
+				p.Val = flag - 10
+				flag = flag / 10
 			} else {
 				p.Val = flag
 				flag = 0
@@ -64,19 +79,14 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 			p.Next = &ListNode{}
 			p = p.Next
 			p1 = p1.Next
-		} else if flag != 0 {
-			p.Val = flag
-			p.Next = &ListNode{}
-			p = p.Next
-			return newL
 		} else {
 			return newL
 		}
-		if p2.Next != nil {
+		if p2 != nil {
 			flag = p2.Val + flag
 			if flag >= 10 {
-				p.Val = flag % 10
-				flag = flag - 10
+				p.Val = flag - 10
+				flag = flag / 10
 			} else {
 				p.Val = flag
 				flag = 0
@@ -84,20 +94,6 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
 			p.Next = &ListNode{}
 			p = p.Next
 			p2 = p2.Next
-		} else if flag != 0 {
-			p.Val = flag
-			p.Next = &ListNode{}
-			p = p.Next
-			return newL
-		} else {
-			return newL
-		}
-
-		if flag != 0 {
-			p.Val = flag
-			p.Next = &ListNode{}
-			p = p.Next
-			return newL
 		} else {
 			return newL
 		}
