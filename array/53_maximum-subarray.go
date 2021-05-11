@@ -53,9 +53,20 @@ func maxSubArray2(nums []int) int {
 	return max
 }
 
-// TODO: 动态规划算法
+// 动态规划算法
 func maxSubArray3(nums []int) int {
-	return 0
+	max := nums[0]
+	length := len(nums)
+	for i := 1; i < length; i++ {
+		if nums[i]+nums[i-1] > nums[i] {
+			nums[i] += nums[i-1]
+		}
+
+		if nums[i] > max {
+			max = nums[i]
+		}
+	}
+	return max
 }
 
 // TODO: 分治算法
