@@ -28,6 +28,7 @@ func main() {
 
 }
 
+// todo: 不是最优算法
 func isPalindrome(head *ListNode) bool {
 
 	if head == nil {
