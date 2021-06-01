@@ -10,7 +10,8 @@ type ListNode struct {
 func main() {
 	var l1 ListNode
 	p1 := &l1
-	num1 := []int{1, 2, 2, 1}
+	num1 := []int{1, 3, 2, 4, 3, 2, 1}
+	//num1 := []int{1, 2, 2, 1}
 	for i, v := range num1 {
 		if i == 0 {
 			l1 = ListNode{v, nil}
@@ -32,25 +33,26 @@ func isPalindrome(head *ListNode) bool {
 	if head == nil {
 		return true
 	}
-
-	p, slow, fast := head, head, head
-
+	head = &ListNode{0, head}
+	p, slow, fast := head, head.Next, head.Next
 	for {
 		if fast != nil && fast.Next != nil && fast.Next.Next != nil && fast.Next.Next.Next != nil {
 			fast = fast.Next.Next
 			p = slow.Next
 			slow.Next = slow.Next.Next
-			p.Next = slow
+			p.Next = head.Next
+			head.Next = p
 		} else if fast != nil && fast.Next != nil && fast.Next.Next != nil {
 			fast = fast.Next.Next
 			slow = slow.Next
+			break
 		} else {
 			break
 		}
 	}
 
 	slow = slow.Next
-	p = head
+	p = head.Next
 	for {
 		if slow != nil && p.Val == slow.Val {
 			slow = slow.Next
