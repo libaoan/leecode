@@ -40,15 +40,11 @@ func nextGreaterElement2(nums1 []int, nums2 []int) []int {
 	stack := []int{}
 	maps := make(map[int]int)
 	for _, x := range nums2 {
-		if len(stack) == 0 || stack[len(stack)-1] >= x {
-			stack = append(stack, x)
-		} else {
-			for len(stack) != 0 && stack[len(stack)-1] < x {
-				maps[stack[len(stack)-1]] = x
-				stack = stack[:len(stack)-1]
-			}
-			stack = append(stack, x)
+		for len(stack) != 0 && stack[len(stack)-1] < x {
+			maps[stack[len(stack)-1]] = x
+			stack = stack[:len(stack)-1]
 		}
+		stack = append(stack, x)
 	}
 	for len(stack) != 0 {
 		maps[stack[len(stack)-1]] = -1
