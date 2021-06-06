@@ -48,7 +48,7 @@ func backspaceCompare2(s string, t string) bool {
 		}
 		return -1, '#'
 	}
-
+        # todo: there is problem，index should be len(s)
 	index1, c1 := len(s)-1, s[len(s)-1]
 	index2, c2 := len(t)-1, s[len(t)-1]
 
