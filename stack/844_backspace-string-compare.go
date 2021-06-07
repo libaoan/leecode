@@ -60,7 +60,7 @@ func backspaceCompare2(s string, t string) bool {
 		}
 	}
 
-	for index1 > 0 {
+	if index1 > 0 {
 		index1, c1 = finder(s[:index1])
 		if index1 != -1 {
 			return false
@@ -68,7 +68,7 @@ func backspaceCompare2(s string, t string) bool {
 		return true
 	}
 
-	for index2 > 0 {
+	if index2 > 0 {
 		index2, c1 = finder(t[:index2])
 		if index2 != -1 {
 			return false
