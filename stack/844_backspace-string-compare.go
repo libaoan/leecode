@@ -48,7 +48,7 @@ func backspaceCompare2(s string, t string) bool {
 		}
 		return -1, '#'
 	}
-	//todo: there is problem，index should be len(s)
+
 	index1, c1 := len(s), s[len(s)-1]
 	index2, c2 := len(t), t[len(t)-1]
 
@@ -60,28 +60,29 @@ func backspaceCompare2(s string, t string) bool {
 		}
 	}
 
-	if index1 == 0 && index2 == 0 && c1 == c2 {
-		return true
+	if index1 > 0 {
+		index1, c1 = finder(s[:index1])
+		if index1 != -1 {
+			return false
+		}
+	}
+
+	if index2 > 0 {
+		index2, c1 = finder(t[:index2])
+		if index2 != -1 {
+			return false
+		}
+	}
+
+	if index1 == 0 && index2 == 0 && c1 != c2 {
+		return false
 	}
 
 	if index1 == -1 && index2 == -1 {
 		return true
 	}
 
-	if index1 > 0 {
-		index1, c1 = finder(s[:index1])
-		if index1 != -1 || c1 != c2 {
-			return false
-		}
-		return true
-	}
+	// 需要判断一个删完，另一个没删完的情况
 
-	if index2 > 0 {
-		index2, c1 = finder(t[:index2])
-		if index2 != -1 || c1 != c2 {
-			return false
-		}
-		return true
-	}
-	return false
+	return true
 }
