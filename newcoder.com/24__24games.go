@@ -1,13 +1,54 @@
 package main
 
-import "fmt"
+import (
+	"bufio"
+	"fmt"
+	"os"
+	"strconv"
+	"strings"
+)
 
 func main() {
-	li := []int{7, 2, 1, 10}
-	li = dedup(li)
+	/*
+		li := []int{7, 2, 1, 10}
+		li = dedup(li)
 
-	signs := []string{"*", "*", "+"}
-	fmt.Print(getResOf24(li, signs))
+		signs := getSigns(len(li)-1)
+		for _, sign := range signs {
+			if getResOf24(li, sign){
+				fmt.Print(li, sign)
+				break
+			}
+		}
+
+	*/
+
+	inputReader := bufio.NewReader(os.Stdin)
+	input, err := inputReader.ReadString('\n')
+	if err != nil {
+		fmt.Println(err)
+	}
+	input = strings.TrimSuffix(input, "\n")
+	inputLi := strings.Split(input, " ")
+	li := []int{}
+
+	for _, in := range inputLi {
+		n, err := strconv.Atoi(in)
+		if err != nil {
+			fmt.Println(err)
+		}
+		li = append(li, n)
+	}
+	// fmt.Println(inputLi)
+	li = dedup(li)
+	signs := getSigns(len(li) - 1)
+	for _, sign := range signs {
+		if getResOf24(li, sign) {
+			fmt.Print(li, sign)
+			break
+		}
+	}
+	//fmt.Print(getResOf24(li, signs))
 }
 
 func getResOf24(li []int, signs []string) bool {
@@ -54,9 +95,28 @@ func getResOf24(li []int, signs []string) bool {
 }
 
 // 获取全排列
-func getSigns(n int) []string {
-	signs := []string{"+", "-", "*", "/"}
-	return signs
+func getSigns(n int) [][]string {
+	if n == 0 {
+		return nil
+	}
+	if n == 1 {
+		return [][]string{[]string{"+"}, []string{"-"}, []string{"*"}, []string{"/"}}
+	}
+
+	resn := [][]string{[]string{"+"}, []string{"-"}, []string{"*"}, []string{"/"}}
+	res := getSigns(n - 1)
+	if res == nil {
+		return resn
+	}
+	result := [][]string{}
+	for _, r := range res {
+		for _, rn := range resn {
+			rn = append(rn, r...)
+			result = append(result, rn)
+		}
+	}
+
+	return result
 }
 
 func dedup(li []int) []int {
