@@ -24,30 +24,66 @@ func subsetXORSum(nums []int) int {
 		return nums[0] ^ nums[1] + nums[0] + nums[1]
 	}
 
-	res := nums[0]
-	for _, x := range nums[1:] {
-		res ^= x
+	sum := 0
+	// 计算包含X元素的集合之异或之和
+	for i := 0; i < ln; i++ {
+
+		subs := getSubset(nums[1:], i)
+		if subs == nil {
+			sum = nums[0]
+		}
+
+		for _, sub := range subs {
+
+			x := nums[0]
+			for _, s := range sub {
+				x ^= s
+			}
+			sum += x
+
+		}
 	}
 
+	// 计算不包含X的真子集异或之和
+	subNumsExcludeX := nums[1:]
+	sum += subsetXORSum(subNumsExcludeX)
+
+	return sum
+}
+
+func getSubset(nums []int, n int) [][]int {
+	if n == 0 || n > len(nums) {
+		return nil
+	}
+	if n == 1 {
+		subset := [][]int{}
+		for i := range nums {
+			subset = append(subset, []int{nums[i]})
+		}
+		return subset
+	}
+
+	if n == len(nums) {
+		return [][]int{nums}
+	}
+
+	subset := [][]int{}
+	// Include nums[0] and chose n-1 in nums[1:]
 	x := nums[0]
-	newNums := nums[1:]
-	sum := x + subsetXORSum(newNums)
-
-	for i, _ := range nums {
-		subNums := []int{}
-		if i == 0 {
-			subNums = nums[1:]
-		} else if i == ln-1 {
-			subNums = nums[:ln-1]
-		} else {
-			subNums = append(nums[:i], nums[i+1:]...)
-		}
-		t := x
-		for _, y := range subNums {
-			t ^= y
-		}
-		sum += t
+	subs := getSubset(nums[1:], n-1)
+	if subs == nil {
+		subset = append(subset, []int{x})
+	}
+	for _, sub := range subs {
+		subWithX := []int{x}
+		subWithX = append(subWithX, sub...)
+		subset = append(subset, subWithX)
+	}
+	// Exclude nums[0] and chose n in nums[1:]
+	subs = getSubset(nums[1:], n)
+	if subs != nil {
+		subset = append(subset, subs...)
 	}
 
-	return res + sum
+	return subset
 }
