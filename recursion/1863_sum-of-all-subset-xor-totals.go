@@ -90,5 +90,36 @@ func getSubset(nums []int, n int) [][]int {
 
 // TODO: 优化算法待实现
 func subsetXORSum2(nums []int) int {
-	return 0
+	ln := len(nums)
+	if ln == 0 {
+		return 0
+	}
+
+	if ln == 1 {
+		return nums[0]
+	}
+
+	if ln == 2 {
+		return nums[0] ^ nums[1] + nums[0] + nums[1]
+	}
+
+	sum := 0
+	for i := 0; i <= ln; i++ {
+
+		subs := getSubset(nums, i)
+		if subs == nil {
+			sum = nums[0]
+		}
+
+		for _, sub := range subs {
+
+			x := nums[0]
+			for _, s := range sub {
+				x ^= s
+			}
+			sum += x
+		}
+	}
+
+	return sum
 }
