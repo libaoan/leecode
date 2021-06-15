@@ -10,6 +10,7 @@ func main() {
 	fmt.Println(subsetXORSum(nums))
 }
 
+// 基础迭代算法
 func subsetXORSum(nums []int) int {
 	ln := len(nums)
 	if ln == 0 {
@@ -45,8 +46,7 @@ func subsetXORSum(nums []int) int {
 	}
 
 	// 计算不包含X的真子集异或之和
-	subNumsExcludeX := nums[1:]
-	sum += subsetXORSum(subNumsExcludeX)
+	sum += subsetXORSum(nums[1:])
 
 	return sum
 }
@@ -86,4 +86,9 @@ func getSubset(nums []int, n int) [][]int {
 	}
 
 	return subset
+}
+
+// TODO: 优化算法待实现
+func subsetXORSum2(nums []int) int {
+	return 0
 }
