@@ -93,6 +93,7 @@ func merge2(intervals [][]int) [][]int {
 			j++
 		} else {
 			result = append(result, []int{intervals[i][0], t})
+                        return result
 		}
 	}
 	result = append(result, []int{intervals[i][0], t})
