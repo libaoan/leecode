@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	res := allCellsDistOrder(2, 3, 1, 2)
+	res := allCellsDistOrder2(2, 3, 1, 2)
 	//res = allCellsDistOrder(2, 2, 0, 1)
 	for _, r := range res {
 		fmt.Println(r)
@@ -39,8 +39,24 @@ func allCellsDistOrder(rows int, cols int, rCenter int, cCenter int) [][]int {
 
 }
 
-// todo 桶排序
+//  桶排序
 func allCellsDistOrder2(rows int, cols int, rCenter int, cCenter int) [][]int {
+	maps := map[int][][]int{}
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			d := int(math.Abs(float64(rCenter-r)) + math.Abs(float64(cCenter-c)))
+			maps[d] = append(maps[d], []int{r, c})
+		}
+	}
+
 	res := [][]int{}
-	return res
+	i := 0
+	for {
+		if v, ok := maps[i]; ok {
+			res = append(res, v...)
+			i++
+		} else {
+			return res
+		}
+	}
 }
