@@ -13,19 +13,14 @@ func main() {
 
 func peakIndexInMountainArray(arr []int) int {
 
-	lw, hi := 0, len(arr)-1
-	if hi < 2 {
+	if len(arr) < 3 {
 		panic("not a MountainArray, count of the array less than 3.")
 	}
 
+	lw, hi := 1, len(arr)-2
+
 	for lw <= hi {
 		mid := lw + (hi-lw)/2
-		if mid == 0 {
-			mid += 1
-		}
-		if mid == len(arr)-1 {
-			mid -= 1
-		}
 		vMid := arr[mid]
 		vPre := arr[mid-1]
 		vAft := arr[mid+1]
