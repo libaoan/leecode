@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"sort"
+)
 
 func main() {
 	arr := []int{24, 69, 100, 99, 79, 78, 67, 36, 26, 19}
@@ -38,4 +41,9 @@ func peakIndexInMountainArray(arr []int) int {
 		}
 	}
 	panic("not a MountainArray")
+}
+
+// 采用sort标准库的二分查找法
+func peakIndexInMountainArray2(arr []int) int {
+	return sort.Search(len(arr)-1, func(i int) bool { return arr[i] > arr[i+1] })
 }
