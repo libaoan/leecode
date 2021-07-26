@@ -75,3 +75,9 @@ func findTheDifference3(s string, t string) byte {
 
 	return byte(sum2 - sum1)
 }
+
+// todo 位运算
+func findTheDifference4(s string, t string) byte {
+	// s + t 中的奇数个字符位
+
+}
