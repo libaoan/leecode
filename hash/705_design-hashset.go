@@ -26,6 +26,7 @@ func main() {
 	fmt.Println(hs2.Contains(2)) // 返回 True
 	hs2.Remove(2)                // set = [1]
 	fmt.Println(hs2.Contains(2)) // 返回 False ，（已移除）
+	fmt.Println(hs2.Contains(0))
 }
 
 const base = 769
@@ -72,39 +73,70 @@ func (s *MyHashSetUseList) Contains(key int) bool {
 const empty = -1
 const deleted = -2
 
-// todo 开放地址法
+// 开放地址法
 type MyHashSetWithOpenAddr struct {
-	caps, length int
-	data         []int
+	caps, count int
+	data        []int
 }
 
 func ConstructorMyHashSetWithOpenAddr() MyHashSetWithOpenAddr {
-	return MyHashSetWithOpenAddr{base, 0, make([]int, 0, base)}
+	ns := MyHashSetWithOpenAddr{base, 0, make([]int, base)}
+	for i := 0; i < ns.caps; i++ {
+		ns.data[i] = empty
+	}
+	return ns
 }
 
 func (s *MyHashSetWithOpenAddr) hash(key int) int {
-	return key % base
+	return key % s.caps
 }
 
 func (s *MyHashSetWithOpenAddr) Add(key int) {
 	if !s.Contains(key) {
+		if float32(s.count)/float32(s.caps) > 0.75 {
+			ns := &MyHashSetWithOpenAddr{2 * s.caps, 0, make([]int, 2*s.caps)}
+			for i := 0; i < ns.caps; i++ {
+				ns.data[i] = empty
+			}
+			for i := 0; i < s.caps; i++ {
+				if s.data[i] != empty && s.data[i] != deleted {
+					ns.Add(s.data[i])
+				}
+			}
+			s = ns
+		}
 		h := s.hash(key)
-		for i := 0; i < base; i++ {
-			if s.data[(h+i)%base] == empty {
-				s.data[(h+i)%base] = key
+		for i := 0; i < s.caps; i++ {
+			if s.data[(h+i)%s.caps] == empty {
+				s.data[(h+i)%s.caps] = key
+				s.count++
 				break
 			}
 		}
-		panic("list is full")
 	}
 }
 
 func (s *MyHashSetWithOpenAddr) Remove(key int) {
-	h := s.hash(key)
-	for i := 0; i < base; i++ {
-		if s.data[(h+i)%base] == key {
-			s.data[(h+i)%base] = deleted
-			break
+	if s.Contains(key) {
+		if float32(s.count)/float32(s.caps) < 0.001 {
+			ns := &MyHashSetWithOpenAddr{s.caps / 2, 0, make([]int, s.caps/2)}
+			for i := 0; i < ns.caps; i++ {
+				ns.data[i] = empty
+			}
+			for i := 0; i < s.caps; i++ {
+				if s.data[i] != empty && s.data[i] != deleted {
+					ns.Add(s.data[i])
+				}
+			}
+			s = ns
+		}
+		h := s.hash(key)
+		for i := 0; i < s.caps; i++ {
+			if s.data[(h+i)%s.caps] == key {
+				s.data[(h+i)%s.caps] = deleted
+				s.count--
+				break
+			}
 		}
 	}
 
@@ -112,8 +144,8 @@ func (s *MyHashSetWithOpenAddr) Remove(key int) {
 
 func (s *MyHashSetWithOpenAddr) Contains(key int) bool {
 	h := s.hash(key)
-	for i := 0; i < base; i++ {
-		if s.data[(h+i)%base] == key {
+	for i := 0; i < s.caps; i++ {
+		if s.data[(h+i)%s.caps] == key {
 			return true
 		}
 	}
