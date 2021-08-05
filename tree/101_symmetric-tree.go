@@ -2,21 +2,29 @@ package main
 
 import "fmt"
 
+// Definition for a binary tree node.
+type TreeNode struct {
+	Val   int
+	Left  *TreeNode
+	Right *TreeNode
+}
+
 func main() {
 	li := []int{1, 2, 2, 3, 4, 4, 3}
-	root := CreateTree(li)
+	root := CreateTree(li, 0)
 	fmt.Println(isSymmetric2(root))
 }
 
-// todo 构造二叉树问题
-func CreateTree(li []int) *TreeNode {
-	var root *TreeNode
+func CreateTree(li []int, index int) *TreeNode {
+	root := &TreeNode{li[index], nil, nil}
 
-	if len(li) != 0 {
-		root = &TreeNode{li[0], nil, nil}
-		root.Left = CreateTree(li[1:])
-		root.Right = CreateTree(li[2:])
+	if len(li) > 2*index+1 {
+		root.Left = CreateTree(li, 2*index+1)
 	}
+	if len(li) > 2*index+2 {
+		root.Right = CreateTree(li, 2*index+2)
+	}
+
 	return root
 }
 
@@ -36,16 +44,19 @@ func check(p, q *TreeNode) bool {
 }
 
 // 迭代
-
 func isSymmetric2(root *TreeNode) bool {
 	p, q := root, root
 	queue := []*TreeNode{}
-	queue = append(queue, p)
-	queue = append(queue, q)
-	for len(queue) >= 0 {
+	queue = append(queue, p, q)
+	for len(queue) > 0 {
 		p := queue[0]
 		q := queue[1]
-		queue := queue[2:]
+		if len(queue) > 2 {
+			queue = queue[2:]
+		} else {
+			queue = nil
+		}
+
 		if p == nil && q == nil {
 			continue
 		}
@@ -55,10 +66,7 @@ func isSymmetric2(root *TreeNode) bool {
 		if p.Val != q.Val {
 			return false
 		}
-		queue = append(queue, p.Right)
-		queue = append(queue, q.Left)
-		queue = append(queue, p.Left)
-		queue = append(queue, q.Right)
+		queue = append(queue, p.Right, q.Left, p.Left, q.Right)
 	}
 	return true
 }
