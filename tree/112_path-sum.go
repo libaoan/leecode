@@ -18,32 +18,39 @@ func hasPathSum(root *TreeNode, targetSum int) bool {
 
 }
 
-// todo: 迭代法
+// 迭代法
 func hasPathSum2(root *TreeNode, targetSum int) bool {
 	if root == nil {
 		return false
 	}
-
+	root.Val = targetSum - root.Val
 	queue := []*TreeNode{root}
 
 	for len(queue) > 0 {
-		node := queue[0]
-		sum := node.Val
-		if len(queue) > 1 {
-			queue = queue[1:]
-		}
-		for node.Left != nil {
-			queue = append(queue, node.Left)
-			node = node.Left
-			sum += node.Val
-		}
-		for node.Right != nil {
-			queue = append(queue, node.Right)
-			node = node.Right
-			sum += node.Val
-		}
-		if sum == targetSum {
-			return true
+
+		cnt := len(queue)
+		for cnt > 0 {
+			node := queue[0]
+			leftVal := node.Val
+			if node.Left == nil && node.Right == nil && node.Val == 0 {
+				return true
+			}
+
+			if node.Left != nil {
+				node.Left.Val = leftVal - node.Left.Val
+				queue = append(queue, node.Left)
+			}
+
+			if node.Right != nil {
+				node.Right.Val = leftVal - node.Right.Val
+				queue = append(queue, node.Right)
+			}
+			if len(queue) > 1 {
+				queue = queue[1:]
+			} else {
+				return false
+			}
+			cnt--
 		}
 
 	}
