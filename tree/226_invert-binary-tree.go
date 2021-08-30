@@ -13,13 +13,14 @@ func invertTree(root *TreeNode) *TreeNode {
 
 }
 
-// todo 迭代，广度优先
+// 迭代，广度优先
 func invertTree2(root *TreeNode) *TreeNode {
 	if root == nil {
 		return nil
 	}
 
-	queue := []*TreeNode{root}
+	queue := []*TreeNode{}
+	queue = append(queue, root)
 	for len(queue) > 0 {
 		node := queue[0]
 		if len(queue) > 1 {
@@ -28,28 +29,21 @@ func invertTree2(root *TreeNode) *TreeNode {
 			queue = []*TreeNode{}
 		}
 
-		left, right := node, node
-		if node.Right != nil {
-			left = node.Right
-			queue = append(queue, node.Right)
+		left := node.Left
+		right := node.Right
+
+		node.Right = left
+		node.Left = right
+
+		if left != nil {
+			queue = append(queue, left)
 		}
 
-		if node.Left != nil {
-			right = node.Left
-			queue = append(queue, node.Left)
-		}
-
-		if left != node {
-			node.Right = left
-		} else {
-			node.Right = nil
-		}
-		if right != node {
-			node.Left = right
-		} else {
-			node.Left = nil
+		if right != nil {
+			queue = append(queue, right)
 		}
 
 	}
 	return root
+
 }
