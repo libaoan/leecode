@@ -1,35 +1,9 @@
 package main
 
 import (
-	"k8s.io/client-go/tools/cache"
 	"strconv"
 	"strings"
 )
-
-func binaryTreePaths(root *TreeNode) []string {
-	if root == nil {
-		return nil
-	}
-	res := []string{}
-	path := []*TreeNode{root}
-	if root.Left != nil {
-		getPath(root.Left, path)
-	}
-
-}
-
-func getPath(root *TreeNode, path []*TreeNode) []*TreeNode {
-	path = append(path, root)
-	if root.Left == nil && root.Right == nil {
-		return path
-	}
-	if root.Left != nil {
-		return getPath(root.Left, path)
-	}
-	if root.Right != nil {
-		return getPath(root.Right, path)
-	}
-}
 
 // 深度迭代遍历 todo 待优化
 func binaryTreePaths2(root *TreeNode) []string {
@@ -73,4 +47,51 @@ func binaryTreePaths2(root *TreeNode) []string {
 		}
 	}
 	return res
+}
+
+// 广度迭代遍历 todo:用例通过率 98%
+func binaryTreePaths4(root *TreeNode) []string {
+	if root == nil {
+		return nil
+	}
+	res := [][]string{}
+	queue := []*TreeNode{root}
+	paths := [][]string{[]string{strconv.Itoa(root.Val)}}
+
+	for len(queue) > 0 {
+		cnt := len(queue)
+		for cnt > 0 {
+			node := queue[0]
+			path := paths[0]
+			if len(queue) > 1 {
+				queue = queue[1:]
+				paths = paths[1:]
+			} else {
+				queue = []*TreeNode{}
+				paths = [][]string{}
+			}
+			if node.Left == nil && node.Right == nil {
+				res = append(res, path)
+			}
+
+			if node.Left != nil {
+				queue = append(queue, node.Left)
+				// todo: append(path,...) 弱引用，和下面一个条件可能冲突 [6,1,null,null,3,2,5,null,null,4] failed
+				tmp_path := append(path, strconv.Itoa(node.Left.Val))
+				paths = append(paths, tmp_path)
+			}
+			if node.Right != nil {
+				queue = append(queue, node.Right)
+				tmp_path := append(path, strconv.Itoa(node.Right.Val))
+				paths = append(paths, tmp_path)
+			}
+			cnt--
+		}
+	}
+
+	ress := []string{}
+	for _, r := range res {
+		ress = append(ress, strings.Join(r, "->"))
+	}
+	return ress
 }
