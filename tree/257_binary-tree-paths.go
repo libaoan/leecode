@@ -49,7 +49,7 @@ func binaryTreePaths2(root *TreeNode) []string {
 	return res
 }
 
-// 广度迭代遍历 todo:用例通过率 98%
+// 广度迭代遍历
 func binaryTreePaths4(root *TreeNode) []string {
 	if root == nil {
 		return nil
@@ -76,9 +76,10 @@ func binaryTreePaths4(root *TreeNode) []string {
 
 			if node.Left != nil {
 				queue = append(queue, node.Left)
-				// todo: append(path,...) 弱引用，和下面一个条件可能冲突 [6,1,null,null,3,2,5,null,null,4] failed
-				tmp_path := append(path, strconv.Itoa(node.Left.Val))
-				paths = append(paths, tmp_path)
+				pathCopy := make([]string, len(path))
+				copy(pathCopy, path)
+				pathCopy = append(pathCopy, strconv.Itoa(node.Left.Val))
+				paths = append(paths, pathCopy)
 			}
 			if node.Right != nil {
 				queue = append(queue, node.Right)
