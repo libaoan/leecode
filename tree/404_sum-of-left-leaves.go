@@ -6,6 +6,7 @@ func sumOfLeftLeaves(root *TreeNode) int {
 	return sum[0]
 }
 
+// 深度遍历，递归
 func sumOfLeftLeave(root *TreeNode, sum []int) {
 	if root == nil {
 		return
@@ -20,4 +21,68 @@ func sumOfLeftLeave(root *TreeNode, sum []int) {
 
 	return
 
+}
+
+// 前序遍历 迭代法
+func sumOfLeftLeaves2(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	sum := 0
+	queue := []*TreeNode{root}
+
+	for len(queue) > 0 {
+		node := queue[0]
+		if len(queue) > 1 {
+			queue = queue[1:]
+		} else {
+			queue = []*TreeNode{}
+		}
+		if node.Left != nil && node.Left.Left == nil && node.Left.Right == nil {
+			sum += node.Left.Val
+		}
+		if node.Left != nil {
+			queue = append(queue, node.Left)
+		}
+		if node.Right != nil {
+			queue = append(queue, node.Right)
+		}
+
+	}
+	return sum
+}
+
+// 广度遍历， 迭代法
+func sumOfLeftLeaves3(root *TreeNode) int {
+	if root == nil {
+		return 0
+	}
+
+	sum := 0
+	queue := []*TreeNode{root}
+	for len(queue) > 0 {
+		cnt := len(queue)
+
+		for cnt > 0 {
+			node := queue[0]
+			if len(queue) > 1 {
+				queue = queue[1:]
+			} else {
+				queue = []*TreeNode{}
+			}
+			if node.Left != nil && node.Left.Left == nil && node.Left.Right == nil {
+				sum += node.Left.Val
+			}
+			if node.Left != nil {
+				queue = append(queue, node.Left)
+			}
+			if node.Right != nil {
+				queue = append(queue, node.Right)
+			}
+			cnt--
+
+		}
+	}
+	return sum
 }
