@@ -65,3 +65,67 @@ func findMode1(root *TreeNode) []int {
 
 	return res
 }
+
+// 迭代法，前序遍历  todo: 用例通过率90%
+func findMode2(root *TreeNode) []int {
+	var base, count, maxcount int = 0, 0, 0
+	var res []int
+
+	update := func(x int) {
+		if x == base {
+			count++
+		} else {
+			base, count = x, 1
+		}
+		if count == maxcount {
+			res = append(res, base)
+		} else if count > maxcount {
+			maxcount = count
+			res = []int{base}
+		}
+	}
+
+	queue := []*TreeNode{}
+	if root != nil {
+
+		update(root.Val)
+		queue = append(queue, root)
+	}
+
+	var pop *TreeNode
+	for len(queue) > 0 {
+		length := len(queue)
+		node := queue[length-1]
+
+		if node.Left == nil || node.Left != nil && node.Left == pop {
+
+			length := len(queue)
+			if length > 1 {
+				queue = queue[0 : length-1]
+			} else {
+				queue = []*TreeNode{}
+			}
+		}
+
+		for node.Left != nil && node.Left != pop {
+			update(node.Left.Val)
+			node = node.Left
+		}
+
+		if node.Right != nil {
+			update(node.Right.Val)
+			queue = append(queue, node.Right)
+		} else {
+			pop = node
+			length := len(queue)
+			if length > 1 {
+				queue = queue[0 : length-1]
+			} else {
+				queue = []*TreeNode{}
+			}
+		}
+	}
+
+	return res
+
+}
