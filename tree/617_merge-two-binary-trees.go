@@ -25,49 +25,70 @@ func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
 	return root1
 }
 
-// todo 迭代法
+// todo 迭代法 未完成
 func mergeTrees2(root1 *TreeNode, root2 *TreeNode) *TreeNode {
 
-	p1, p2 := root1, root2
-	p := p1
-	if p1 == nil {
-		p = p2
-	}
-	leftq, rightq := []*TreeNode{}, []*TreeNode{}
-	if p1.Left != nil {
-		leftq = append(leftq, p1.Left)
+	if root1 == nil {
+		return root2
 	}
 
-	if p2.Left != nil {
-		leftq = append(leftq, p2.Left)
+	if root2 == nil {
+		return root1
 	}
 
-	if p1.Right != nil {
-		rightq = append(rightq, p1.Right)
-	}
+	newRoot := &TreeNode{root1.Val + root2.Val, nil, nil}
+	queue := []*TreeNode{newRoot}
+	queue1 := []*TreeNode{root1}
+	queue2 := []*TreeNode{root2}
 
-	if p2.Right != nil {
-		rightq = append(rightq, p2.Right)
-	}
+	for len(queue1) > 0 || len(queue2) > 0 {
+		node1 := queue1[0]
+		queue1 = queue1[1:]
+		node2 := queue2[0]
+		queue2 = queue2[1:]
+		node := queue[0]
+		queue = queue[1:]
 
-	for len(leftq) != 0 || len(rightq) != 0 {
+		if node1 == nil && node2 == nil {
+			return newRoot
+		}
 
-		if p1 != nil && p2 != nil {
-			p.Val = p1.Val + p2.Val
+		if node1 != nil && node2 != nil {
+			node1l := node1.Left
+			node1r := node1.Right
+			node2l := node2.Left
+			node2r := node2.Right
+			newNodel := &TreeNode{node1l.Val + node2l.Val, nil, nil}
+			newNoder := &TreeNode{node1r.Val + node2r.Val, nil, nil}
+			node.Left = newNodel
+			node.Right = newNoder
+			queue = append(queue, newNodel, newNoder)
+			queue1 = append(queue1, node1l, node1r)
+			queue2 = append(queue2, node2l, node2r)
+		}
 
+		if node1 == nil {
+			node2l := node2.Left
+			node2r := node2.Right
+			newNodel := &TreeNode{node2l.Val, nil, nil}
+			newNoder := &TreeNode{node2r.Val, nil, nil}
+			node.Left = newNodel
+			node.Right = newNoder
+			queue = append(queue, newNodel, newNoder)
+			queue2 = append(queue2, node2l, node2r)
+		} else {
+			node1l := node1.Left
+			node1r := node1.Right
+			newNodel := &TreeNode{node1l.Val, nil, nil}
+			newNoder := &TreeNode{node1r.Val, nil, nil}
+			node.Left = newNodel
+			node.Right = newNoder
+			queue = append(queue, newNodel, newNoder)
+			queue1 = append(queue1, node1l, node1r)
 		}
 
 	}
 
-	for root1 != nil || root2 != nil {
-		if root1 != nil && root2 != nil {
-			root1.Val += root2.Val
-			p1l = root1.Left
-			p1r = root1.Right
-
-			p2l = root2.Left
-			p2r = root2.Right
-		}
-	}
+	return newRoot
 
 }
