@@ -48,6 +48,31 @@ func longestPalindrome(s string) int {
 	return cnt
 }
 
+// 优化1
+func longestPalindrome2(s string) int {
+
+	maps := map[int32]int{}
+	for _, c := range s {
+		maps[c]++
+	}
+
+	cnt := 0
+	for _, v := range maps {
+		if v&1 == 1 {
+			cnt += v - 1
+		} else {
+			cnt += v
+		}
+	}
+
+	if cnt < len(s) {
+		cnt++
+	}
+
+	return cnt
+
+}
+
 func main() {
 
 	s := "aaaaaccc"
