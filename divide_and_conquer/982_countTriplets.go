@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// 算法负责度从n3 下降到n2， 利用分治算法实现
+// 算法负责度从n3 下降到n2， 不是利用分治算法实现，通过一点技巧然后遍历
 func countTriplets(nums []int) (ans int) {
 
 	cnt := [1 << 16]int{}
