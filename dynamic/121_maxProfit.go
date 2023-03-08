@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"math"
+	"time"
 )
 
 // todo: 通过率90%，非动态规划算法，复杂度n2
@@ -42,7 +43,6 @@ func maxProfit2(prices []int) int {
 		tmpV = prices[i] - minV
 		if resV < tmpV {
 			resV = tmpV
-			println(prices[i], minV, resV)
 		}
 	}
 	return resV
@@ -79,6 +79,32 @@ func maxProfit3(prices []int) int {
 	}
 }
 
+// 别人的代码
+func maxProfit4(prices []int) int {
+	length := len(prices)
+	if length == 0 {
+		return 0
+	}
+	dp := make([][]int, length)
+	for i := 0; i < length; i++ {
+		dp[i] = make([]int, 2)
+	}
+
+	dp[0][0] = -prices[0]
+	dp[0][1] = 0
+	for i := 1; i < length; i++ {
+		dp[i][0] = dp[i-1][0]
+		if dp[i-1][0] < -prices[i] {
+			dp[i][0] = -prices[i]
+		}
+		dp[i][1] = dp[i-1][1]
+		if dp[i-1][1] < dp[i-1][0]+prices[i] {
+			dp[i][1] = dp[i-1][0] + prices[i]
+		}
+	}
+	return dp[length-1][1]
+}
+
 func main() {
 	s := []int{
 		897, 265, 201, 86, 56, 657, 273, 25, 843, 625, 641, 332, 509, 463, 496, 97, 779, 241, 970, 665, 87, 765, 276,
@@ -102,5 +128,19 @@ func main() {
 		1,
 	}
 	//s = []int{7, 1, 5, 3, 6, 4}
+	start := time.Now().UnixNano()
+	fmt.Println(maxProfit(s))
+	fmt.Println("运行时间", time.Now().UnixNano()-start)
+
+	start = time.Now().UnixNano()
+	fmt.Println(maxProfit2(s))
+	fmt.Println("运行时间", time.Now().UnixNano()-start)
+
+	start = time.Now().UnixNano()
 	fmt.Println(maxProfit3(s))
+	fmt.Println("运行时间", time.Now().UnixNano()-start)
+
+	start = time.Now().UnixNano()
+	fmt.Println(maxProfit4(s))
+	fmt.Println("运行时间", time.Now().UnixNano()-start)
 }
