@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 // 动态规划  算法复杂度n， 空间复杂度 n
 // 推倒公式 f(n) = f(n-1) + f(n-1)
 func climbStairs(n int) int {
@@ -23,6 +21,6 @@ func climbStairs(n int) int {
 	return cnts[n]
 }
 
-func main() {
-	fmt.Println(climbStairs(6))
-}
+//func main() {
+//	fmt.Println(climbStairs(6))
+//}
