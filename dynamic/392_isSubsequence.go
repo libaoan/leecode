@@ -30,27 +30,38 @@ func isSubsequence2(s string, t string) bool {
 	return false
 }
 
-// 动态规划
+// 动态规划 速度100%， 内存60%
 func isSubsequence(s string, t string) bool {
+
+	m := len(s)
+	if m == 0 {
+		return true
+	}
 	n := len(t)
 	cmp := -1
-	for i := 0; i < len(s); i++ {
-		for j := cmp + 1; j < n; j++ {
+	for i := 0; i < m; i++ {
+		j := cmp + 1
+		for ; j < n; j++ {
 			if s[i] == t[j] {
 				cmp = j
 				break
 			}
 		}
-
+		// println(i,j)
+		if j == n && i <= m-1 {
+			return false
+		}
 	}
+
+	return cmp != -1 && cmp < n
 }
 
 func main() {
-	s := "axc"
+	s := "acb"
 	t := "ahbgdc"
-	s = "abc"
-	t = "aefbsc"
+	//s = "abc"
+	//t = "aefbsc"
 	start := time.Now().UnixNano()
-	fmt.Println(isSubsequence2(s, t))
+	fmt.Println(isSubsequence(s, t))
 	fmt.Println("运行时间", time.Now().UnixNano()-start)
 }
