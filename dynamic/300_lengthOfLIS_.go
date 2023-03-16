@@ -66,11 +66,53 @@ func lengthOfLIS2(nums []int) int {
 	return maxN
 }
 
+func lengthOfLIS3(nums []int) int {
+	n := len(nums)
+	if n <= 1 {
+		return n
+	}
+
+	for i := 2; i < n; i++ {
+		subL := f(nums, i)
+		for _, s := range subL {
+			fmt.Println(s)
+		}
+	}
+
+	return 0
+}
+
+func f(nums []int, length int) [][]int {
+	n := len(nums)
+	res := make([][]int, 0)
+
+	if length < 2 {
+		res = append(res, nums)
+	} else {
+		for i := 0; i < n; i++ {
+			item := nums[i]
+			numss := make([]int, n)
+			if i < n-1 {
+				numss = append(nums[:i], nums[i+1:]...)
+			} else {
+				numss = nums[:i]
+			}
+			subL := f(numss, length-1)
+			for _, s := range subL {
+				s = append(s, item)
+				res = append(res, s)
+			}
+		}
+
+	}
+	return res
+}
+
 func main() {
 	nums := []int{10, 9, 2, 5, 3, 7, 101, 18}
 	nums = []int{0, 1, 0, 3, 2, 3}
 	//nums = []int{3,5,6,2,5,4,19,5,6,7,12}
 	start := time.Now().UnixNano()
-	fmt.Println(lengthOfLIS2(nums))
+	fmt.Println(lengthOfLIS3(nums))
 	fmt.Println("运行时间", time.Now().UnixNano()-start)
 }
