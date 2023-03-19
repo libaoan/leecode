@@ -39,13 +39,7 @@ func massage(nums []int) int {
 		fmt.Println(dp)
 	}
 
-	res := 0
-	for _, r := range dp {
-		if res < r {
-			res = r
-		}
-	}
-	return res
+	return dp[n-1]
 }
 
 func main() {
