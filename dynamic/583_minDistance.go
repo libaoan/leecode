@@ -36,10 +36,49 @@ func minDistance1(word1 string, word2 string) int {
 
 }
 
+// 动态规划 m[n1][n2] 代表 w[:n1] w[:n2] 的最小子序列
+// 速度 88%， 内存22%
+func minDistance(word1 string, word2 string) int {
+	n1, n2 := len(word1), len(word2)
+	if n1 == 0 {
+		return n2
+	}
+	if n2 == 0 {
+		return n1
+	}
+	m := make([][]int, n1+1)
+	for i, _ := range m {
+		m[i] = make([]int, n2+1)
+	}
+	for i := 0; i <= n2; i++ {
+		m[0][i] = i
+	}
+	for i := 0; i <= n1; i++ {
+		m[i][0] = i
+	}
+	for i := 0; i < n1; i++ {
+		for j := 0; j < n2; j++ {
+			if word1[i] == word2[j] {
+				m[i+1][j+1] = m[i][j]
+			} else {
+				m[i+1][j+1] = min(m[i][j+1], m[i+1][j]) + 1
+			}
+		}
+	}
+	return m[n1][n2]
+}
+
+func min(i, j int) int {
+	if i < j {
+		return i
+	}
+	return j
+}
+
 func main() {
-	word1 := "sea"
-	word2 := "eat"
+	word1 := "a"
+	word2 := "b"
 	start := time.Now().UnixNano()
-	fmt.Println(minDistance1(word1, word2))
+	fmt.Println(minDistance(word1, word2))
 	fmt.Println("运行时间", time.Now().UnixNano()-start)
 }
