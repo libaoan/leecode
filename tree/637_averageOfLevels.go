@@ -31,3 +31,35 @@ func averageOfLevels(root *TreeNode) []float64 {
 	}
 	return res
 }
+
+// 深度遍历， 速度 68% 内存 20%
+func averageOfLevels2(root *TreeNode) []float64 {
+	data := make([]struct {
+		sum int
+		cnt int
+	}, 0)
+	var dfs func(node *TreeNode, level int)
+	dfs = func(node *TreeNode, level int) {
+		if node == nil {
+			return
+		}
+		if len(data) > level {
+			data[level].sum += node.Val
+			data[level].cnt++
+		} else {
+			data = append(data, struct {
+				sum int
+				cnt int
+			}{sum: node.Val, cnt: 1})
+		}
+
+		dfs(node.Right, level+1)
+		dfs(node.Left, level+1)
+	}
+	dfs(root, 0)
+	res := make([]float64, 0)
+	for _, d := range data {
+		res = append(res, float64(d.sum)/float64(d.cnt))
+	}
+	return res
+}
