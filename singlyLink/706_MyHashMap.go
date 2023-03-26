@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-const Cap = 673
+const Cap = 100000
 
 type Data struct {
 	value int
@@ -108,6 +108,13 @@ func main() {
 	fmt.Println(obj.Get(3))
 	fmt.Println(obj.Get(2))
 	obj.Put(2, 1)
+	obj.Put(392, 227)
+	obj.Remove(523)
+	obj.Put(800, 270)
+	obj.Put(404, 803)
+	obj.Put(71988, 15658)
+	obj.Put(60237, 15986)
+	obj.Put(91573, 20689)
 	obj.printAll()
 	//fmt.Println(obj.data[0].next)
 	fmt.Println(obj.Get(2))
