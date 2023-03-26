@@ -2,6 +2,8 @@ package main
 
 import "fmt"
 
+const Cap = 673
+
 type Data struct {
 	value int
 	key   int
@@ -9,64 +11,42 @@ type Data struct {
 }
 
 type MyHashMap struct {
-	data []*Data
-	cap  int
+	data [Cap]*Data
 }
 
 func Constructor() MyHashMap {
-	return MyHashMap{}
+	return MyHashMap{
+		data: [Cap]*Data{},
+	}
 }
 
 func (this *MyHashMap) hash(key int) int {
-	if this.cap == 0 {
-		return key
-	}
-	return key % this.cap
+	return key % Cap
 }
 
 func (this *MyHashMap) Put(key int, value int) {
-
-	if this.cap == 0 || this.cap <= this.hash(key) {
-		cap_ := this.cap + this.hash(key)
-		tmp := MyHashMap{
-			data: make([]*Data, cap_),
-			cap:  cap_,
-		}
-		for _, v := range this.data {
-			for v != nil {
-				tmp.Put(v.key, v.value)
-				v = v.next
-			}
-		}
-		*this = tmp
-	}
-
 	k := this.hash(key)
 	pre, cur := this.data[k], this.data[k]
 	for cur != nil && cur.key != key {
 		pre = cur
 		cur = cur.next
 	}
+	// empty
 	if pre == nil {
-		da := &Data{key: key, value: value}
-		this.data[k] = da
+		this.data[k] = &Data{key: key, value: value}
 		return
 	}
-	if cur != nil && cur.key == key {
+	// found and replace
+	if cur != nil {
 		cur.value = value
 		return
 	}
-	da := &Data{key: key, value: value}
-	da.value = value
-	da.key = key
-	pre.next = da
+	// not found
+	pre.next = &Data{key: key, value: value}
 }
 
 func (this *MyHashMap) Get(key int) int {
 	k := this.hash(key)
-	if this.cap <= k {
-		return -1
-	}
 	cur := this.data[k]
 	for cur != nil && cur.key != key {
 		cur = cur.next
@@ -79,9 +59,6 @@ func (this *MyHashMap) Get(key int) int {
 
 func (this *MyHashMap) Remove(key int) {
 	k := this.hash(key)
-	if this.cap <= k {
-		return
-	}
 	pre, cur := this.data[k], this.data[k]
 	for cur != nil && cur.key != key {
 		pre = cur
@@ -91,7 +68,22 @@ func (this *MyHashMap) Remove(key int) {
 		return
 	}
 	pre.next = cur.next
-	cur.next = nil
+	cur = nil
+}
+
+func (this *MyHashMap) printAll() {
+	for i := range this.data {
+		cur := this.data[i]
+		// fmt.Printf("xxx %T, %v, %t\r\n", cur, cur, cur == nil)
+		if cur == nil {
+			continue
+		}
+
+		for ; cur != nil; cur = cur.next {
+			fmt.Printf("[%d, %d]", cur.key, cur.value)
+		}
+		fmt.Println()
+	}
 }
 
 /**
@@ -106,10 +98,12 @@ func main() {
 	obj := Constructor()
 	obj.Put(1, 1)
 	obj.Put(2, 2)
+	obj.printAll()
 	fmt.Println(obj.Get(1))
 	fmt.Println(obj.Get(3))
 	fmt.Println(obj.Get(2))
 	obj.Put(2, 1)
+	obj.printAll()
 	//fmt.Println(obj.data[0].next)
 	fmt.Println(obj.Get(2))
 }
