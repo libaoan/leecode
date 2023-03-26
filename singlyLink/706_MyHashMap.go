@@ -10,6 +10,7 @@ type Data struct {
 	next  *Data
 }
 
+// todo 通过率90%
 type MyHashMap struct {
 	data [Cap]*Data
 }
@@ -67,8 +68,12 @@ func (this *MyHashMap) Remove(key int) {
 	if cur == nil {
 		return
 	}
-	pre.next = cur.next
-	cur = nil
+	if pre.next == nil {
+		this.data[k] = nil
+	} else {
+		pre.next = cur.next
+		cur = nil
+	}
 }
 
 func (this *MyHashMap) printAll() {
