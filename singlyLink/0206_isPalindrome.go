@@ -5,18 +5,36 @@ type ListNode struct {
 	Next *ListNode
 }
 
-// todo: 快慢指针
+// 快慢指针 时间复杂度n 空间复杂度1 速度97%， 内存98%
 func isPalindrome(head *ListNode) bool {
+
+	if head == nil {
+		return true
+	}
 
 	p, q := head, head
 	var r *ListNode
-	for q != nil && q.Next != nil {
+	head = nil
+	for q != nil {
 		r = p
 		p = p.Next
+		if q.Next == nil {
+			break
+		}
 		q = q.Next.Next
+
 		r.Next = head
 		head = r
 	}
+	r = head
+	for p != nil && r != nil {
+		if r.Val != p.Val {
+			return false
+		}
+		p = p.Next
+		r = r.Next
+	}
+	return true
 
 }
 
