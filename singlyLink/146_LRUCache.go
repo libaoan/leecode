@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// todo: 通过率90%，待检查
+// todo: 通过率90%，本地测试无问题
 type Node struct {
 	Val  int
 	Key  int
@@ -102,9 +102,11 @@ func (this *LRUCache) Put(key int, value int) {
 
 func main() {
 
-	lru := Constructor(1)
-	lru.Put(2, 1)
-	lru.Put(3, 2)
+	lru := Constructor(100000)
+	for i := 0; i < 100000; i++ {
+		lru.Put(i, i)
+		fmt.Println(lru.Get(i))
+	}
 	fmt.Println(lru.Get(3))
-	fmt.Println(lru.Get(2))
+	fmt.Println(lru.Get(2999))
 }
