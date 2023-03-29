@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-// todo: 通过率50%，待检查
+// todo: 通过率90%，待检查
 type Node struct {
 	Val  int
 	Key  int
@@ -53,7 +53,7 @@ func (this *LRUCache) Get(key int) int {
 
 func (this *LRUCache) Put(key int, value int) {
 
-	if this.cap == 0 {
+	if this.cap < 1 {
 		return
 	}
 	if this.data == nil {
@@ -64,21 +64,24 @@ func (this *LRUCache) Put(key int, value int) {
 	pre, cur := this.data, this.data.Next
 	if pre.Key == key {
 		pre.Val = value
+		return
 	}
+
 	cnt := 1
 	for cur != nil {
-		if cur.Key == key {
+		if cur.Key != key {
+			cnt++
+			pre = cur
+			cur = cur.Next
+		} else {
 			pre.Next = cur.Next
 			cur.Next = this.data
 			this.data = cur
 			cur.Val = value
 			return
-		} else {
-			cnt++
-			pre = cur
-			cur = cur.Next
 		}
 	}
+
 	if cnt < this.cap {
 		this.data = &Node{Key: key, Val: value, Next: this.data}
 	} else {
@@ -87,18 +90,21 @@ func (this *LRUCache) Put(key int, value int) {
 			pre = cur
 			cur = cur.Next
 		}
-		pre.Next = nil
-		this.data = &Node{Key: key, Val: value, Next: this.data}
+		if pre.Next != nil {
+			pre.Next = nil
+			this.data = &Node{Key: key, Val: value, Next: this.data}
+		} else {
+			this.data = &Node{Key: key, Val: value}
+		}
 	}
 
 }
 
 func main() {
 
-	lru := Constructor(2)
-	lru.Put(1, 1)
-	lru.Put(2, 2)
-	fmt.Println(lru.Get(1))
-	lru.Put(3, 3)
+	lru := Constructor(1)
+	lru.Put(2, 1)
+	lru.Put(3, 2)
+	fmt.Println(lru.Get(3))
 	fmt.Println(lru.Get(2))
 }
