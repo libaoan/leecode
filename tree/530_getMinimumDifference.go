@@ -69,127 +69,74 @@ func getMinimumDifference(root *TreeNode) int {
 	return ans
 }
 
-// todo: 深度遍历， 通过率50%
+// todo: 优化深度遍历， 通过率50%
 func getMinimumDifference2(root *TreeNode) int {
 
 	if root == nil {
 		return 0
 	}
-	queue := []*TreeNode{}
+
+	abs := func(i, j int) int {
+		if i > j {
+			return i - j
+		}
+		return j - i
+	}
+
+	queue := []*TreeNode{root}
 	mins := math.MaxInt
-	node := root
-	// 左树
-	for node != nil {
+
+	for len(queue) > 0 {
+		node := queue[len(queue)-1]
+		// 遍历左子树
 		for node.Left != nil {
-			if mins > (node.Val - node.Left.Val) {
-				mins = node.Val - node.Left.Val
+			delta := abs(node.Val, node.Left.Val)
+			if mins > delta {
+				mins = delta
 			}
 			node = node.Left
 			queue = append(queue, node)
 		}
-
-		if len(queue) == 0 {
-			break
+		// 左子树为空， node要出队列, 出队时，要遍历队列并计算差值
+		queue = queue[:len(queue)-1]
+		for _, n := range queue {
+			delta := abs(node.Val, n.Val)
+			if mins > delta {
+				mins = delta
+			}
 		}
 
+		// 遍历node的右子树
+		//   如果右子树不为空，加入队列
+		//   如果右子树为空，继续出队一个新的node，并检查它的右子树
 		if node.Right != nil {
-			if mins > node.Right.Val-node.Val {
-				mins = node.Right.Val - node.Val
+			queue = append(queue, node.Right)
+			delta := abs(node.Val, node.Right.Val)
+			if mins > delta {
+				mins = delta
 			}
-			if mins > root.Val-node.Val {
-				mins = root.Val - node.Val
-			}
-			if len(queue) < 1 {
-				break
-			}
-			queue = queue[:len(queue)-1]
-			node = node.Right
-			queue = append(queue, node)
 		} else {
-			if mins > root.Val-node.Val {
-				mins = root.Val - node.Val
-			}
-			if len(queue) < 2 {
-				break
-			}
-			queue = queue[:len(queue)-1]
-			node = queue[len(queue)-1]
-			if mins > root.Val-node.Val {
-				mins = root.Val - node.Val
-			}
-			if node.Right != nil {
-				if mins > node.Right.Val-node.Val {
-					mins = node.Right.Val - node.Val
-				}
-				if mins > root.Val-node.Val {
-					mins = root.Val - node.Val
-				}
-				if len(queue) < 2 {
-					break
-				}
+			// 如果node为叶子节点，从堆栈中弹出一个新的节点,并进行遍历求差
+			for len(queue) > 0 && node.Right == nil {
+				node = queue[len(queue)-1]
 				queue = queue[:len(queue)-1]
-				queue = append(queue, node.Right)
+				for _, n := range queue {
+					delta := abs(node.Val, n.Val)
+					if mins > delta {
+						mins = delta
+					}
+				}
 			}
-			node = node.Right
-		}
-	}
-
-	// 右树
-	node = root.Right
-	queue = []*TreeNode{node}
-	if node == nil {
-		return mins
-	}
-	if mins > node.Val-root.Val {
-		mins = node.Val - root.Val
-	}
-	for node != nil {
-		for node.Left != nil {
-			if mins > node.Val-node.Left.Val {
-				mins = node.Val - node.Left.Val
-			}
-			node = node.Left
-			queue = append(queue, node)
-		}
-
-		if len(queue) == 0 {
-			break
-		}
-
-		if node.Right != nil {
-			if mins > node.Right.Val-node.Val {
-				mins = node.Right.Val - node.Val
-			}
-			if mins > node.Val-root.Val {
-				mins = node.Val - root.Val
-			}
-			queue = queue[:len(queue)-1]
-			node = node.Right
-			queue = append(queue, node)
-		} else {
-			if mins > node.Val-root.Val {
-				mins = node.Val - root.Val
-			}
-			if len(queue) < 2 {
-				break
-			}
-			queue = queue[:len(queue)-1]
-			node = queue[len(queue)-1]
+			// 如果从堆栈弹出的节点右子树不为空，加入堆栈继续遍历
 			if node.Right != nil {
-				if mins > node.Right.Val-node.Val {
-					mins = node.Right.Val - node.Val
-				}
-				if mins > node.Val-root.Val {
-					mins = node.Val - root.Val
-				}
-				if len(queue) < 2 {
-					break
-				}
-				queue = queue[:len(queue)-1]
 				queue = append(queue, node.Right)
+				delta := abs(node.Val, node.Right.Val)
+				if mins > delta {
+					mins = delta
+				}
 			}
-			node = node.Right
 		}
 	}
+
 	return mins
 }
