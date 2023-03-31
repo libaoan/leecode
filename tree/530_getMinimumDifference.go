@@ -69,7 +69,7 @@ func getMinimumDifference(root *TreeNode) int {
 	return ans
 }
 
-// todo: 优化深度遍历， 通过率50%
+// todo: 优化深度遍历， 通过率90%
 func getMinimumDifference2(root *TreeNode) int {
 
 	if root == nil {
@@ -84,6 +84,7 @@ func getMinimumDifference2(root *TreeNode) int {
 	}
 
 	queue := []*TreeNode{root}
+	poped := []*TreeNode{root}
 	mins := math.MaxInt
 
 	for len(queue) > 0 {
@@ -99,12 +100,28 @@ func getMinimumDifference2(root *TreeNode) int {
 		}
 		// 左子树为空， node要出队列, 出队时，要遍历队列并计算差值
 		queue = queue[:len(queue)-1]
+		if node != root {
+			delta := abs(node.Val, root.Val)
+			if mins > delta {
+				mins = delta
+			}
+		}
 		for _, n := range queue {
 			delta := abs(node.Val, n.Val)
 			if mins > delta {
 				mins = delta
 			}
 		}
+		for _, n := range poped {
+			if node == n {
+				continue
+			}
+			delta := abs(node.Val, n.Val)
+			if mins > delta {
+				mins = delta
+			}
+		}
+		poped = append(poped, node)
 
 		// 遍历node的右子树
 		//   如果右子树不为空，加入队列
@@ -118,14 +135,30 @@ func getMinimumDifference2(root *TreeNode) int {
 		} else {
 			// 如果node为叶子节点，从堆栈中弹出一个新的节点,并进行遍历求差
 			for len(queue) > 0 && node.Right == nil {
-				node = queue[len(queue)-1]
-				queue = queue[:len(queue)-1]
+				if node != root {
+					delta := abs(node.Val, root.Val)
+					if mins > delta {
+						mins = delta
+					}
+				}
 				for _, n := range queue {
 					delta := abs(node.Val, n.Val)
 					if mins > delta {
 						mins = delta
 					}
 				}
+				for _, n := range poped {
+					if node == n {
+						continue
+					}
+					delta := abs(node.Val, n.Val)
+					if mins > delta {
+						mins = delta
+					}
+				}
+				poped = append(poped, node)
+				node = queue[len(queue)-1]
+				queue = queue[:len(queue)-1]
 			}
 			// 如果从堆栈弹出的节点右子树不为空，加入堆栈继续遍历
 			if node.Right != nil {
@@ -134,6 +167,24 @@ func getMinimumDifference2(root *TreeNode) int {
 				if mins > delta {
 					mins = delta
 				}
+			}
+			if len(queue) == 0 && node.Right == nil {
+				if node != root {
+					delta := abs(node.Val, root.Val)
+					if mins > delta {
+						mins = delta
+					}
+				}
+				for _, n := range poped {
+					if node == n {
+						continue
+					}
+					delta := abs(node.Val, n.Val)
+					if mins > delta {
+						mins = delta
+					}
+				}
+				poped = append(poped, node)
 			}
 		}
 	}
