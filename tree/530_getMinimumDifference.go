@@ -69,7 +69,8 @@ func getMinimumDifference(root *TreeNode) int {
 	return ans
 }
 
-// todo: 优化深度遍历， 通过率90%
+// 优化深度遍历， 速度 9%, 内存43%
+// todo 还可以继续优化
 func getMinimumDifference2(root *TreeNode) int {
 
 	if root == nil {
@@ -100,12 +101,6 @@ func getMinimumDifference2(root *TreeNode) int {
 		}
 		// 左子树为空， node要出队列, 出队时，要遍历队列并计算差值
 		queue = queue[:len(queue)-1]
-		if node != root {
-			delta := abs(node.Val, root.Val)
-			if mins > delta {
-				mins = delta
-			}
-		}
 		for _, n := range queue {
 			delta := abs(node.Val, n.Val)
 			if mins > delta {
@@ -135,12 +130,8 @@ func getMinimumDifference2(root *TreeNode) int {
 		} else {
 			// 如果node为叶子节点，从堆栈中弹出一个新的节点,并进行遍历求差
 			for len(queue) > 0 && node.Right == nil {
-				if node != root {
-					delta := abs(node.Val, root.Val)
-					if mins > delta {
-						mins = delta
-					}
-				}
+				node = queue[len(queue)-1]
+				queue = queue[:len(queue)-1]
 				for _, n := range queue {
 					delta := abs(node.Val, n.Val)
 					if mins > delta {
@@ -157,8 +148,6 @@ func getMinimumDifference2(root *TreeNode) int {
 					}
 				}
 				poped = append(poped, node)
-				node = queue[len(queue)-1]
-				queue = queue[:len(queue)-1]
 			}
 			// 如果从堆栈弹出的节点右子树不为空，加入堆栈继续遍历
 			if node.Right != nil {
@@ -168,13 +157,7 @@ func getMinimumDifference2(root *TreeNode) int {
 					mins = delta
 				}
 			}
-			if len(queue) == 0 && node.Right == nil {
-				if node != root {
-					delta := abs(node.Val, root.Val)
-					if mins > delta {
-						mins = delta
-					}
-				}
+			if len(queue) == 0 {
 				for _, n := range poped {
 					if node == n {
 						continue
