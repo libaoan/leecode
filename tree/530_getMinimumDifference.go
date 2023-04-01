@@ -10,9 +10,8 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-// 空间 n 时间n2  速度3% 内存 3%
-// todo 待优化
-func getMinimumDifference(root *TreeNode) int {
+// 空间 n 时间n2  速度9% 内存 50%
+func getMinimumDifference2(root *TreeNode) int {
 	if root == nil {
 		return 0
 	}
