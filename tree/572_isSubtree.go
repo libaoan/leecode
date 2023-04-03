@@ -55,3 +55,59 @@ func deepEqual(node1, node2 *TreeNode) bool {
 	}
 	return false
 }
+
+// 通过堆栈深度遍历， 速度 43% 内存 13%
+func isSubtree2(root *TreeNode, subRoot *TreeNode) bool {
+	if root == nil && subRoot == nil {
+		return true
+	}
+
+	if root == nil || subRoot == nil {
+		return false
+	}
+
+	stack := []*TreeNode{root}
+	targetNodes := []*TreeNode{}
+	for len(stack) != 0 {
+		node := stack[len(stack)-1]
+		if node.Val == subRoot.Val {
+			targetNodes = append(targetNodes, node)
+		}
+		for node.Left != nil {
+			stack = append(stack, node.Left)
+			node = node.Left
+			if node.Val == subRoot.Val {
+				targetNodes = append(targetNodes, node)
+			}
+		}
+		stack = stack[:len(stack)-1]
+		if node.Right != nil {
+			stack = append(stack, node.Right)
+			node = node.Right
+			if node.Val == subRoot.Val {
+				targetNodes = append(targetNodes, node)
+			}
+		} else {
+			for len(stack) > 0 && node.Right == nil {
+				node = stack[len(stack)-1]
+				stack = stack[:len(stack)-1]
+			}
+			if node.Right != nil {
+				stack = append(stack, node.Right)
+				node = node.Right
+				if node.Val == subRoot.Val {
+					targetNodes = append(targetNodes, node)
+				}
+			}
+
+		}
+
+	}
+
+	for _, node := range targetNodes {
+		if deepEqual(node, subRoot) {
+			return true
+		}
+	}
+	return false
+}
