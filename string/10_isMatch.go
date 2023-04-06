@@ -5,7 +5,7 @@ import "fmt"
 // 1. p 不是点,且后面不是*， 直接匹配，不相同返回false，相同下一位
 // 2. p 是点，且后面是星，直接匹配到p的倒数第星位
 // 3. p 是点，s下一位
-// todo : 通过率90%, 待完善
+// todo : 通过率90%,  此算法对于 s, p = "aaa", "ab*a*c*a" 无法计算
 func isMatch(s string, p string) bool {
 	sLen, pLen := len(s), len(p)
 
@@ -55,16 +55,18 @@ func isMatch(s string, p string) bool {
 				}
 			}
 
-			// 如果后面有* todo
-			j := 0
-			for ; j < sLen && s[j] == p[0]; j++ {
-				// 如果s[j] 和 p[0] 相等，继续往后匹配
+			// 如果后面有*
+			leftN := pLen - i
+			if sLen < leftN {
+				return isMatch(s, p[i:])
+			} else {
+				for j := 0; j < sLen-leftN; j++ {
+					if s[j] != p[0] {
+						return false
+					}
+				}
+				return isMatch(s[sLen-leftN:], p[i:])
 			}
-			// p = .* 模式
-			if i >= sLen {
-				return false
-			}
-			return isMatch(s[pLen-i+1:], p[i:])
 		}
 
 	} else {
@@ -106,5 +108,7 @@ func main() {
 	s, p = "ab", ".*"
 	s, p = "aab", "c*a*b"
 	s, p = "aaa", "a*a"
+	s, p = "aaa", "ab*a"
+	s, p = "aaa", "ab*a*c*a"
 	fmt.Println(isMatch(s, p))
 }
