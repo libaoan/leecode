@@ -4,11 +4,9 @@ import (
 	"fmt"
 )
 
-// 动态规划算法
+// 动态规划算法， 时间 85%, 空间 99%
 // fn = 1 n=1,2,4,8 ...
-// fn = f(n-1) + 1 n%2 != 0
-// fn = f(n-1)     n%2 == 0
-// [todo] f(12) + 不符合
+// fn = f(n) + f(n-x)
 func countBits(n int) []int {
 
 	ans := make([]int, n+1)
@@ -16,16 +14,14 @@ func countBits(n int) []int {
 	for i := 1; i <= n; i++ {
 		b := 1
 		for ; b < i; b = b << 1 {
-			print(b, " ")
+			//print(b, " ")
 		}
-		println()
-		switch {
-		case b == i:
+		// println()
+		if b == i {
 			ans[i] = 1
-		case i%2 == 0:
-			ans[i] = ans[i-1]
-		default:
-			ans[i] = ans[i-1] + 1
+		} else {
+			b = b >> 1
+			ans[i] = ans[b] + ans[i-b]
 		}
 	}
 	return ans
