@@ -70,6 +70,58 @@ func findAllPeople(n int, meetings [][]int, firstPerson int) []int {
 
 }
 
+// 优化 O(n3), 通过率80%
+func findAllPeople2(n int, meetings [][]int, firstPerson int) []int {
+
+	ans := make([]int, n)
+	ans[firstPerson] = firstPerson
+	sort.Slice(meetings, func(i, j int) bool {
+		return meetings[i][2] < meetings[j][2]
+	})
+
+	i := 0
+	for i < len(meetings)-1 {
+
+		j := i
+		for ; j < len(meetings)-1 && meetings[j][2] == meetings[j+1][2]; j++ {
+		}
+
+		for x := i; x <= j; x++ {
+			found := false
+			if meetings[x][2] != 0 && (ans[meetings[x][0]] == meetings[x][0] || ans[meetings[x][1]] == meetings[x][1]) {
+				ans[meetings[x][0]] = meetings[x][0]
+				ans[meetings[x][1]] = meetings[x][1]
+				meetings[x][2] = 0
+				found = true
+				x = i
+			}
+			if x == j && found == false {
+				break
+			}
+
+		}
+		i = j + 1
+	}
+
+	if i == len(meetings)-1 {
+		if ans[meetings[i][0]] == meetings[i][0] || ans[meetings[i][1]] == meetings[i][1] {
+			ans[meetings[i][0]] = meetings[i][0]
+			ans[meetings[i][1]] = meetings[i][1]
+		}
+	}
+
+	// fmt.Println(ans)
+
+	an := []int{0}
+	for i := 1; i < n; i++ {
+		if ans[i] != 0 {
+			an = append(an, ans[i])
+		}
+	}
+	return an
+
+}
+
 func main() {
 	meetings := [][]int{
 		{3, 1, 3},
@@ -91,5 +143,9 @@ func main() {
 		{1, 3, 1},
 		{4, 5, 1},
 	}
-	fmt.Println(findAllPeople(6, meetings, 1))
+	meetings = [][]int{
+		{1, 4, 3},
+		{0, 4, 3},
+	}
+	fmt.Println(findAllPeople2(5, meetings, 3))
 }
