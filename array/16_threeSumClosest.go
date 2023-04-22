@@ -16,11 +16,9 @@ func threeSumClosest(nums []int, target int) int {
 	minus := []int{}
 	n := len(nums)
 	for i := 0; i < n; i++ {
-		for j := 0; j < n; j++ {
-			for k := 0; k < n; k++ {
-				if i != j && i != k && j != k {
-					minus = append(minus, nums[i]+nums[j]+nums[k]-target)
-				}
+		for j := i + 1; j < n; j++ {
+			for k := j + 1; k < n; k++ {
+				minus = append(minus, nums[i]+nums[j]+nums[k]-target)
 			}
 		}
 	}
