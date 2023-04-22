@@ -70,7 +70,7 @@ func findAllPeople(n int, meetings [][]int, firstPerson int) []int {
 
 }
 
-// 优化 O(n3), 通过率80%
+// todo 优化 O(n2), 通过率90%, 可能必须要用dfs算法
 func findAllPeople2(n int, meetings [][]int, firstPerson int) []int {
 
 	ans := make([]int, n)
@@ -93,7 +93,7 @@ func findAllPeople2(n int, meetings [][]int, firstPerson int) []int {
 				ans[meetings[x][1]] = meetings[x][1]
 				meetings[x][2] = 0
 				found = true
-				x = i
+				x = i - 1
 			}
 			if x == j && found == false {
 				break
