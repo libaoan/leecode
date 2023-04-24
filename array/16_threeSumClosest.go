@@ -44,3 +44,23 @@ func threeSumClosest(nums []int, target int) int {
 	}
 
 }
+
+// 双指针法
+func threeSumClosest2(nums []int, target int) int {
+	sort.Ints(nums)
+	n := len(nums)
+	abs := func(a)
+	for i := 0; i < n; i++ {
+		j, k := 0, n-1
+		sum := nums[i] + nums[j] + nums[k]
+		if sum == target {
+			return sum
+		}
+		if sum < target {
+			j++
+		} else {
+			k--
+		}
+
+	}
+}
