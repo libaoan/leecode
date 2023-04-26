@@ -6,12 +6,12 @@ import (
 )
 
 func main() {
-	nums := []int{2, 3, 1}
+	nums := []int{1, 5, 1}
 	nextPermutation(nums)
 	fmt.Println(nums)
 }
 
-// 复杂度O(n3)， 通过率90%， 最后一步
+// 复杂度O(n3)， 速度 52%， 内存 70%
 func nextPermutation(nums []int) {
 
 	// 1. 最后2位比较，如果次位小于最后一位，交换结果返回; 大于等于最后一位，检查倒数第3位
@@ -38,12 +38,19 @@ func nextPermutation(nums []int) {
 	}
 
 	for i := 3; i <= n; i++ {
-		if !isMax(nums[n-i], nums[n-i:]) {
-			p := nums[n-i]
-			sort.Ints(nums[n-i:])
-			for j, x := range nums[n-i:] {
-				if x == p {
-					nums[n-i], nums[n-i+j+1] = nums[n-i+j+1], nums[n-i]
+		p := nums[n-i]
+		if !isMax(p, nums[n-i:]) {
+			snums := make([]int, len(nums[n-i:]))
+			copy(snums, nums[n-i:])
+			sort.Ints(snums)
+			for j := 0; j < len(snums); j++ {
+				if snums[j] == p && snums[j+1] > p {
+					k := j + 1
+					nums = append(nums[:n-i], snums[k])
+					nums = append(nums, snums[:k]...)
+					if k < len(snums)-1 {
+						nums = append(nums, snums[k+1:]...)
+					}
 					return
 				}
 			}
