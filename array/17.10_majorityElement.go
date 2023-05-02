@@ -6,23 +6,28 @@ func main() {
 	nums := []int{1, 2, 5, 9, 5, 9, 5, 5, 5}
 	nums = []int{2, 2, 1, 1, 1, 2, 2}
 	nums = []int{6, 5, 5}
+	nums = []int{2, 2, 2, 3, 3, 4, 4}
 	fmt.Println(majorityElement(nums))
 }
 
-// todo 待调试
+// 速度 100%， 内存63%
 func majorityElement(nums []int) int {
+
+	return reg(nums, len(nums))
+
+}
+
+func reg(nums []int, nl int) int {
 	n := len(nums)
 	i, j := 1, n-1
 	cnt := 1
 	for i <= j {
 		if nums[i] < nums[0] {
 			i++
-		}
-		if nums[i] > nums[0] {
+		} else if nums[i] > nums[0] {
 			nums[i], nums[j] = nums[j], nums[i]
 			j--
-		}
-		if nums[i] == nums[0] {
+		} else {
 			nums[i] = -1
 			i++
 			cnt++
@@ -31,12 +36,12 @@ func majorityElement(nums []int) int {
 
 	// fmt.Println(nums, cnt, i, j)
 
-	if cnt > n/2 {
+	if cnt > nl/2 {
 		return nums[0]
 	}
 
-	if n-j > n/2 {
-		return majorityElement(nums[j+1:])
+	if n-j > nl/2 {
+		return reg(nums[j+1:], nl)
 	}
 	k := 0
 	for _, x := range nums[1:i] {
@@ -46,7 +51,7 @@ func majorityElement(nums []int) int {
 		}
 	}
 	if len(nums[:k]) > n/2 {
-		return majorityElement(nums[:k])
+		return reg(nums[:k], nl)
 	}
 
 	return -1
