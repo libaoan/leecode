@@ -11,36 +11,24 @@ func main() {
 	fmt.Println(intersect(nums1, nums2))
 }
 
-// O(n3), 通过率 50% todo： 审题错误，不考虑顺序
+// O(n2), 速度 73%, 内存 88%
 func intersect(nums1 []int, nums2 []int) []int {
 
 	if len(nums1) < len(nums2) {
 		nums1, nums2 = nums2, nums1
 	}
 
-	sets := [][]int{}
+	ans := []int{}
 
 	for i := 0; i < len(nums1); i++ {
-		for j := 0; j < len(nums2); {
+		for j := 0; j < len(nums2); j++ {
 			if nums1[i] == nums2[j] {
-				k := 1
-				// fmt.Println(i, j, k)
-				for i+k < len(nums1) && j+k < len(nums2) && nums1[i+k] == nums2[j+k] {
-					k++
-				}
-				sets = append(sets, nums1[i:i+k])
-				j = j + k
-			} else {
-				j++
+				ans = append(ans, nums2[j])
+				nums2[j] = -1
+				break
 			}
 		}
 	}
 
-	ans := []int{}
-	for _, set := range sets {
-		if len(ans) < len(set) {
-			ans = set
-		}
-	}
 	return ans
 }
