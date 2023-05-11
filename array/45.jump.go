@@ -12,12 +12,12 @@ func main() {
 
 }
 
-// todo: 通过率20%
+// O(n) 速度80% 内存50%
 func jump(nums []int) int {
 
 	max := func(i, j int, nums []int) int {
 		for k := i + 1; k <= j; k++ {
-			if nums[k] > nums[i] {
+			if k+nums[k] > i+nums[i] {
 				i = k
 			}
 		}
