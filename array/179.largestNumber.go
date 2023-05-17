@@ -10,10 +10,14 @@ func main() {
 	nums := []int{1, 2, 3, 13}
 	nums = []int{10, 2}
 	nums = []int{3, 30, 34, 5, 9}
+	nums = []int{34323, 3432}
+	nums = []int{3333341, 3333}
+	nums = []int{0, 0}
+	nums = []int{12341, 123411234}
 	fmt.Println(largestNumber(nums))
 }
 
-// todo 通过率 90%
+// todo 通过率 99%
 func largestNumber(nums []int) string {
 
 	n := len(nums)
@@ -38,13 +42,38 @@ func largestNumber(nums []int) string {
 		}
 
 		if k == li {
-			return ss[i][k-1] >= ss[j][k]
+			for ; k < lj; k++ {
+				for n := 0; n < li; n++ {
+					if ss[i][n] > ss[j][k] {
+						return true
+					}
+					if ss[i][n] < ss[j][k] {
+						return false
+					}
+				}
+			}
+			return true
 		} else {
-			return ss[i][k] >= ss[j][k-1]
+			for ; k < li; k++ {
+				for n := 0; n < lj; n++ {
+					if ss[i][k] > ss[j][n] {
+						return true
+					}
+					if ss[i][k] < ss[j][n] {
+						return false
+					}
+				}
+			}
+			return true
 		}
 	})
 
 	fmt.Println(ss)
 
-	return strings.Join(ss, "")
+	res := strings.TrimLeft(strings.Join(ss, ""), "0")
+	if res == "" {
+		return "0"
+	} else {
+		return res
+	}
 }
