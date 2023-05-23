@@ -12,10 +12,11 @@ func main() {
 	nums, k = []int{5, 6, 9, -3, 3}, 2
 	nums, k = []int{-2, 9, 9, 8, 4}, 5
 	nums, k = []int{-8, 3, -5, -3, -5, -2}, 6
+	nums, k = []int{8, -7, -3, -9, 1, 9, -6, -9, 3}, 8
 	fmt.Println(largestSumAfterKNegations(nums, k))
 }
 
-// todo：通过率99%
+// O(n2) 速度 80%, 内存80%
 func largestSumAfterKNegations(nums []int, k int) int {
 	sort.Ints(nums)
 
@@ -59,9 +60,15 @@ func largestSumAfterKNegations(nums []int, k int) int {
 		if (k-cnt)%2 == 0 {
 			return sum(nums[cnt:]) - sum(nums[:cnt])
 		} else if cnt == n {
-			return -sum(nums)
+			return -sum(nums[:cnt]) + 2*nums[cnt-1]
 		} else {
-			return sum(nums[cnt+1:]) - sum(nums[:cnt+1])
+			//fmt.Println(nums)
+			if -nums[cnt-1] < nums[cnt] {
+				return sum(nums[cnt:]) - sum(nums[:cnt]) + 2*nums[cnt-1]
+			} else {
+				return sum(nums[cnt:]) - sum(nums[:cnt]) - 2*nums[cnt]
+			}
+
 		}
 	}
 
