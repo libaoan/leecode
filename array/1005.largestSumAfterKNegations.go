@@ -13,7 +13,9 @@ func main() {
 	nums, k = []int{-2, 9, 9, 8, 4}, 5
 	nums, k = []int{-8, 3, -5, -3, -5, -2}, 6
 	nums, k = []int{8, -7, -3, -9, 1, 9, -6, -9, 3}, 8
-	fmt.Println(largestSumAfterKNegations(nums, k))
+	nums, k = []int{8, -7, -1, -9, 2, 9, -6, -9, 3}, 8
+	nums, k = []int{2, -3, -1, 5, -4}, 2
+	fmt.Println(largestSumAfterKNegations3(nums, k))
 }
 
 // O(n2) 速度 80%, 内存80%
@@ -72,4 +74,64 @@ func largestSumAfterKNegations(nums []int, k int) int {
 		}
 	}
 
+}
+
+// todo： 参考别人的答案， 贪心算法 O(n) 速度 80%, 内存3%
+func largestSumAfterKNegations2(nums []int, k int) (ans int) {
+
+	maps := make(map[int]int, 0)
+
+	for _, c := range nums {
+		maps[c]++
+		ans += c
+	}
+
+	for i := -100; i < 0 && k > 0; i++ {
+		if maps[i] > 0 {
+			ops := min(k, maps[i])
+			ans -= i * ops * 2
+			maps[-i] += ops
+			k -= ops
+		}
+	}
+
+	if maps[0] == 0 && k > 0 && k%2 != 0 {
+		for i := 1; i <= 100; i++ {
+			if maps[i] > 0 {
+				ans -= i * 2
+				break
+			}
+		}
+	}
+
+	return
+}
+
+func min(a, b int) int {
+	if a > b {
+		return b
+	}
+	return a
+}
+
+// todo： 参考别人的答案， 贪心算法 O(n) 速度 86%, 内存80%
+func largestSumAfterKNegations3(nums []int, k int) (ans int) {
+
+	sort.Ints(nums)
+	for i := 0; i < len(nums); i++ {
+		// 贪心：如果是负数，而k还有盈余，就把负数反过来
+		if nums[i] < 0 && k > 0 {
+			nums[i] = -1 * nums[i]
+			k--
+		}
+		ans += nums[i]
+	}
+
+	sort.Ints(nums)
+
+	if k%2 != 0 {
+		ans -= 2 * nums[0]
+	}
+
+	return
 }
