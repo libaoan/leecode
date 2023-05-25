@@ -36,3 +36,35 @@ func canThreePartsEqualSum(arr []int) bool {
 	}
 	return false
 }
+
+// todo: 别人的思路, 贪心算法 O(n) 速度 96%， 内存 64%
+func canThreePartsEqualSum2(arr []int) bool {
+	n, target := len(arr), 0
+	for i := 0; i < n; i++ {
+		target += arr[i]
+	}
+	if target%3 != 0 {
+		return false
+	}
+
+	target /= 3
+	cur, i := 0, 0
+	for ; i < n-2; i++ {
+		cur += arr[i]
+		if cur == target {
+			break
+		}
+	}
+	if cur != target {
+		return false
+	}
+
+	for ; i < n-2; i++ {
+		cur += arr[i+1]
+		if cur == 2*target {
+			return true
+		}
+	}
+	return false
+
+}
