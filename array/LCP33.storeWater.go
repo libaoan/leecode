@@ -63,6 +63,10 @@ func storeWater(bucket []int, vat []int) int {
 			return sli[i][2] > sli[j][2] || (sli[i][2] == sli[j][2] && sli[i][0] > sli[j][0])
 		})
 
+		if sli[0][2] == 0 {
+			return 0
+		}
+
 		fmt.Println(sli[0], sli[1], ck)
 
 		mCnt, cnt := sli[0][2], 0
