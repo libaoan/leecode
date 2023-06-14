@@ -11,7 +11,7 @@ type TreeNode struct {
 	Right *TreeNode
 }
 
-// dfs T=41% S=50%
+// 回朔 T=41% S=50%
 func isValidBST(root *TreeNode) bool {
 
 	if root == nil {
@@ -55,4 +55,43 @@ func bst(root, cur *TreeNode) bool {
 			return true
 		}
 	}
+}
+
+// dfs T=100% S=6%
+func isValidBST2(root *TreeNode) bool {
+
+	if root == nil {
+		return true
+	}
+
+	stack := []*TreeNode{}
+	for root != nil {
+		stack = append(stack, root)
+		root = root.Left
+	}
+
+	li := []int{}
+
+	for len(stack) != 0 {
+		node := stack[len(stack)-1]
+		stack = stack[0 : len(stack)-1]
+		if node.Right != nil {
+			tmp := node.Right
+			stack = append(stack, tmp)
+			for tmp.Left != nil {
+				tmp = tmp.Left
+				stack = append(stack, tmp)
+			}
+		}
+
+		li = append(li, node.Val)
+	}
+
+	for i := 0; i < len(li)-1; i++ {
+		if li[i] >= li[i+1] {
+			return false
+		}
+	}
+	return true
+
 }
